@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
 import { sharedStyles as styles } from '../styles/shared.ts';
+import { API_KEY } from '@env';
 
 export default function UserSignupScreen({ navigation }: any) {
   const [username, setUsername] = useState('');
@@ -25,12 +26,39 @@ export default function UserSignupScreen({ navigation }: any) {
     return true;
   };
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     if (validate()) {
-      console.log({ username, phone, email, password });
-      navigation.navigate('UserHomeScreen')
+      try {
+  
+        const res = await fetch(
+          `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password, returnSecureToken: true }),
+          }
+        );
+  
+  
+        const data = await res.json();
+  
+        if (res.status === 200) {
+          console.log({ username, phone, email, password });
+          navigation.navigate('UserHomeScreen');
+        } else if (res.status === 400) {
+          const errorMsg = data?.error?.message || 'Signup failed';
+          setError(`Signup failed: ${errorMsg}`);
+        } else {
+          setError('Something went wrong. Please try again.');
+        }
+  
+      } catch (err) {
+        console.error('Signup error:', err);
+        setError('Network error. Please try again later.');
+      }
     }
   };
+  
 
   return (
     <View style={styles.container}>

@@ -1,40 +1,23 @@
-// src/components/CustomInput.tsx
 import React, { useState } from 'react';
-import { TextInput, View, Text, StyleSheet } from 'react-native';
+import { TextInput, View, StyleSheet, Text, TextInputProps } from 'react-native';
 
-type Props = {
-  placeholder: string;
-  value: string;
-  onChangeText: (text: string) => void;
-  secureTextEntry?: boolean;
-  keyboardType?: 'default' | 'email-address' | 'phone-pad';
+interface Props extends TextInputProps {
   error?: string;
-};
+}
 
-export default function CustomInput({
-  placeholder,
-  value,
-  onChangeText,
-  secureTextEntry,
-  keyboardType = 'default',
-  error,
-}: Props) {
+export default function CustomInput({ error, style, ...props }: Props) {
   const [focused, setFocused] = useState(false);
 
   return (
     <View style={styles.container}>
       <TextInput
-        placeholder={placeholder}
-        style={[styles.input, focused && styles.focusedInput]}
-        value={value}
-        onChangeText={onChangeText}
-        secureTextEntry={secureTextEntry}
-        keyboardType={keyboardType}
+        {...props}
+        style={[styles.input, focused && styles.focusedInput, style]}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         placeholderTextColor="#888"
       />
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      {error && <Text style={styles.error}>{error}</Text>}
     </View>
   );
 }
@@ -42,25 +25,22 @@ export default function CustomInput({
 const styles = StyleSheet.create({
   container: { marginBottom: 16 },
   input: {
-    borderWidth: 1,
-    borderColor: '#DDD',
+    borderWidth: 1.5,
+    borderColor: '#ccc',
     borderRadius: 12,
-    padding: 14,
-    backgroundColor: '#FAFAFA',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    backgroundColor: '#f9f9f9',
     fontSize: 16,
+    color: '#333',
   },
   focusedInput: {
-    borderColor: '#4B9CD3',
-    backgroundColor: '#FFF',
-    shadowColor: '#4B9CD3',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 2,
+    borderColor: '#007bff',
+    backgroundColor: '#fff',
   },
   error: {
     marginTop: 4,
-    color: 'red',
+    color: '#d9534f',
     fontSize: 13,
     marginLeft: 5,
   },

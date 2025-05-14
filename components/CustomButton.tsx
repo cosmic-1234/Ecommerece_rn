@@ -1,44 +1,36 @@
-// src/components/CustomButton.tsx
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import { Text, Pressable, StyleSheet, View } from 'react-native';
 
-type Props = {
+interface Props {
   title: string;
   onPress: () => void;
-};
+}
 
 export default function CustomButton({ title, onPress }: Props) {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.buttonWrapper}>
-      <LinearGradient
-        colors={['#4B9CD3', '#007ACC']}
-        style={styles.button}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-      >
+    <View style={styles.buttonWrapper}>
+      <Pressable style={({ pressed }) => [styles.button, pressed && { opacity: 0.7 }]} onPress={onPress}>
         <Text style={styles.text}>{title}</Text>
-      </LinearGradient>
-    </TouchableOpacity>
+      </Pressable>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   buttonWrapper: {
-    width: '100%',
-    alignItems: 'center',
-    marginVertical: 10,
+    marginVertical: 12,
+    overflow: 'hidden',
+    borderRadius: 14,
   },
   button: {
-    padding: 15,
-    borderRadius: 16,
-    width: '100%',
+    backgroundColor: '#007bff',
+    paddingVertical: 14,
+    borderRadius: 14,
     alignItems: 'center',
-    elevation: 2,
   },
   text: {
-    color: '#FFF',
+    color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
 });

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
+import { sharedStyles as styles } from '../styles/shared.ts';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 
@@ -9,32 +10,45 @@ type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'UserSignin'>;
 };
 
-export default function AdminSigninScreen({ navigation }: Props) {
+export default function AdminSigninScreen({ navigation }: any) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const validate = () => {
-    if (!/\S+@\S+\.\S+/.test(email)) return setError('Invalid email');
-    if (!password) return setError('Password required');
+  const validate = (): boolean => {
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (!emailRegex.test(email)) {
+      setError('Invalid email');
+      return false;
+    }
+    if (!password) {
+      setError('Password required');
+      return false;
+    }
     setError('');
     return true;
   };
 
+  const handleSignin = () => {
+    if (validate()) {
+      console.log({ email, password });
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Admin Login</Text>
-      <CustomInput placeholder="Email" value={email} onChangeText={setEmail} keyboardType="email-address" />
-      <CustomInput placeholder="Password" value={password} onChangeText={setPassword} secureTextEntry />
-      {error ? <Text style={styles.error}>{error}</Text> : null}
-      <CustomButton title="Sign In" onPress={() => validate() && console.log({ email, password })} />
-      <CustomButton title="Go to Sign Up" onPress={() => navigation.navigate('AdminSignup')} />
+      <View style={styles.card}>
+        <Text style={styles.title}>Admin Sign In</Text>
+        <CustomInput placeholder="Email" value={email} onChangeText={setEmail} keyboardType="email-address" />
+        <CustomInput placeholder="Password" value={password} onChangeText={setPassword} secureTextEntry />
+        {error ? <Text style={styles.error}>{error}</Text> : null}
+        <CustomButton title="Sign In" onPress={handleSignin} />
+        <Text style={styles.link} onPress={() => navigation.navigate('AdminSignup')}>
+          Don't have an account? Sign up
+        </Text>
+      </View>
     </View>
   );
 }
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 24, justifyContent: 'center', backgroundColor: '#F4F7FB' },
-  title: { fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginBottom: 24 },
-  error: { color: 'red', marginTop: 4, textAlign: 'center' },
-});
+
 

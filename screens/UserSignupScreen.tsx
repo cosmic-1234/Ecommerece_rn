@@ -1,54 +1,50 @@
-// src/screens/UserSigninScreen.tsx
 import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../navigation/AppNavigator';
+import { sharedStyles as styles } from '../styles/shared.ts';
 
-type Props = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'UserSignin'>;
-};
-
-// same imports...
-export default function UserSignupScreen({ navigation }: Props) {
-  const [email, setEmail] = useState('');
+export default function UserSignupScreen({ navigation }: any) {
   const [username, setUsername] = useState('');
   const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const validate = () => {
+  const validate = (): boolean => {
     const emailRegex = /\S+@\S+\.\S+/;
-    if (!emailRegex.test(email)) return setError('Invalid email');
-    if (!username || !phone) return setError('Username & phone are required');
-    if (password.length < 6) return setError('Password must be 6+ characters');
+    if (!username || !phone || !email || !password) {
+      setError('All fields are required');
+      return false;
+    }
+    if (!emailRegex.test(email)) {
+      setError('Invalid email');
+      return false;
+    }
     setError('');
     return true;
   };
 
   const handleSignup = () => {
     if (validate()) {
-      console.log({ email, username, phone, password });
+      console.log({ username, phone, email, password });
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>User Sign Up</Text>
-      <CustomInput placeholder="Email" value={email} onChangeText={setEmail} keyboardType="email-address" />
-      <CustomInput placeholder="Username" value={username} onChangeText={setUsername} />
-      <CustomInput placeholder="Phone Number" value={phone} onChangeText={setPhone} keyboardType="phone-pad" />
-      <CustomInput placeholder="Password" value={password} onChangeText={setPassword} secureTextEntry />
-      {error ? <Text style={styles.error}>{error}</Text> : null}
-      <CustomButton title="Sign Up" onPress={handleSignup} />
-      <CustomButton title="Go to Sign In" onPress={() => navigation.navigate('UserSignin')} />
+      <View style={styles.card}>
+        <Text style={styles.title}>User Sign Up</Text>
+        <CustomInput placeholder="Username" value={username} onChangeText={setUsername} />
+        <CustomInput placeholder="Phone Number" value={phone} onChangeText={setPhone} keyboardType="phone-pad" />
+        <CustomInput placeholder="Email" value={email} onChangeText={setEmail} keyboardType="email-address" />
+        <CustomInput placeholder="Password" value={password} onChangeText={setPassword} secureTextEntry />
+        {error ? <Text style={styles.error}>{error}</Text> : null}
+        <CustomButton title="Sign Up" onPress={handleSignup} />
+        <Text style={styles.link} onPress={() => navigation.navigate('UserSignin')}>
+          Already have an account? Sign in
+        </Text>
+      </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 24, justifyContent: 'center', backgroundColor: '#F4F7FB' },
-  title: { fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginBottom: 24 },
-  error: { color: 'red', marginTop: 4, textAlign: 'center' },
-});

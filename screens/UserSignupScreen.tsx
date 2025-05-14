@@ -28,6 +28,7 @@ export default function UserSignupScreen({ navigation }: any) {
   const handleSignup = () => {
     if (validate()) {
       console.log({ username, phone, email, password });
+      navigation.navigate('UserHomeScreen')
     }
   };
 

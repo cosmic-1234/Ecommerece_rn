@@ -11,8 +11,6 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-
-// Type definitions
 type Product = {
   id: number;
   title: string;
@@ -66,7 +64,7 @@ export default function UserHomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#f4f7fc" />
-      <Text style={styles.header}>🛍️ Welcome to ShopEase</Text>
+      <Text style={styles.header}>🛍️ Welcome to Ecommerce</Text>
 
       <View style={styles.cartButtonContainer}>
         <Pressable
